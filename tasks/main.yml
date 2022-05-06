@@ -29,6 +29,8 @@
     name: "@Infiniband Support"
     state: present
     nobest: "{{ ofed_nobest | bool }}"
+    skip_broken: "{{ ofed_skipbroken | bool }}"
+    allowerasing: "{{ ofed_allowerasing | bool }}"
   become: true
   when:
     - ansible_os_family == "RedHat"
@@ -38,7 +40,9 @@
   dnf:
     name: "@Infiniband Support"
     state: present
-    nobest: "{{ ofed_nobest }}"
+    nobest: "{{ ofed_nobest | bool }}"
+    skip_broken: "{{ ofed_skipbroken | bool }}"
+    allowerasing: "{{ ofed_allowerasing | bool }}"
   become: true
   when:
     - ansible_os_family == "RedHat"

@@ -64,10 +64,14 @@ If the OFED drivers fail to install with conflicts over `libibverbs` with an err
 
 This can be resolved from the command line by passing `--nobest` to `yum` or `dnf`, or with this playbook with the `ofed_nobest` variable.
 
+For further issues (such as installing older OFED drivers) the `--allowerasing` and `--skipbroken` parameters can also be passed with `ofed_allowerasing` and `ofed_skipbroken` respectivly
+
 ```
     - hosts: servers
       vars:
         ofed_nobest: true
+        ofed_skipbroken: true
+        ofed_allowerasing: true
       tasks:
         - include_role: stackhpc.ofed
 ```
