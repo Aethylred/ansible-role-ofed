@@ -24,7 +24,7 @@
     key: http://www.mellanox.com/downloads/ofed/RPM-GPG-KEY-Mellanox
   become: true
 
-- name: Install infiniband support
+- name: Install infiniband support (yum)
   yum:
     name: "@Infiniband Support"
     state: present
@@ -36,9 +36,33 @@
     - ansible_os_family == "RedHat"
     - ansible_distribution_major_version < '8'
 
-- name: Install infiniband support
+- name: Install infiniband support (dnf)
   dnf:
     name: "@Infiniband Support"
+    state: present
+    nobest: "{{ ofed_nobest | bool }}"
+    skip_broken: "{{ ofed_skipbroken | bool }}"
+    allowerasing: "{{ ofed_allowerasing | bool }}"
+  become: true
+  when:
+    - ansible_os_family == "RedHat"
+    - ansible_distribution_major_version >= '8'
+
+- name: Install kmod-mlnx-ofa_kernel (yum)
+  yum:
+    name: kmod-mlnx-ofa_kernel
+    state: present
+    nobest: "{{ ofed_nobest | bool }}"
+    skip_broken: "{{ ofed_skipbroken | bool }}"
+    allowerasing: "{{ ofed_allowerasing | bool }}"
+  become: true
+  when:
+    - ansible_os_family == "RedHat"
+    - ansible_distribution_major_version < '8'
+
+- name: Install kmod-mlnx-ofa_kernel (dnf)
+  dnf:
+    name: kmod-mlnx-ofa_kernel
     state: present
     nobest: "{{ ofed_nobest | bool }}"
     skip_broken: "{{ ofed_skipbroken | bool }}"
