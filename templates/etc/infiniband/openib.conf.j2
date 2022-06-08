@@ -13,6 +13,7 @@ ALLOW_STOP=yes
 # if the available modules were not installed by MLNX_OFED package.
 FORCE_MODE={% if ofed_force_mode %}yes{% else %}no{% endif %}
 
+
 # Node description
 NODE_DESC=$(hostname -s)
 
@@ -55,6 +56,7 @@ UVERBS_LOAD=yes
 RDMA_CM_LOAD=yes
 # Load RDMA_UCM module
 RDMA_UCM_LOAD={% if ofed_rdma_ucm_load %}yes{% else %}no{% endif %}
+
 # Load MLX5 modules
 MLX5_LOAD=yes
 # Load IPoIB
