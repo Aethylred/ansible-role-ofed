@@ -28,9 +28,17 @@ None
         - include_role: stackhpc.ofed
 ```
 
-## Using custom settings
+# Custom settings
 
-These settings will install the OFED drivers from a local repository, and target version and the RHEL8.3 release
+## Defining the package repository
+
+There are two methods of defining the repositories used to install the OFED drivers, setting the `ofed_custom_repos` disables the URL method.
+
+**NOTE:** If how the repository definition method changes it is recommended to purge the old repo files _before_ running the StackHPC OFED role as this can lead to unpredictable behaviour when installing packages and their dependencies.
+
+### Defining the repository with a URL
+
+These settings will install the OFED drivers from a local repository, and target version and the RHEL8.3 release. This expects there to be a `.repo` file at the location to configuer the repository
 
 ```
     - hosts: servers
@@ -38,6 +46,33 @@ These settings will install the OFED drivers from a local repository, and target
         ofed_repository_url: http://repo.local
         ofed_version: '5.2-2.2.0.0'
         ofed_target_release: rhel8.3
+      tasks:
+        - include_role: stackhpc.ofed
+```
+
+### Using a custom repository
+
+Defining the `ofed_custom_repos` variable can be used to be more explicit with the repository configuration. This disables the url method specified with `ofed_repository_url`, `ofed_version`, and `ofed_target_release`. This can be used to define multiple repositories if required, note that the standed Mellanox OFED repository configuration is four repositories in a single repository configuration file.
+
+```
+    - hosts: servers
+      vars:
+        ofed_custom_repos:
+          - name: Repository One
+            file: two_repos_one_file.repo
+            baseurl: https://repo.one.url
+          - name: Repository Two
+            file: two_repos_one_file.repo
+            baseurl: https://repo.two.url
+          - name: Repository Three
+            file: detailed_repo_three.repo
+            description: "Detailed repository definition"
+            baseurl: https://repo.three.url
+            mirrorlist: https://repo.three.mirrorlist.url
+            enabled: false
+            gpgkey: https://repo.three.gpgkey.url
+            gpgcheck: true
+            verifyssl: false
       tasks:
         - include_role: stackhpc.ofed
 ```

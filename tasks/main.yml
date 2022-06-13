@@ -1,7 +1,7 @@
 ---
 # tasks file for ofed
 
-- name: Install the repository
+- name: Install the repository (yum)
   command: yum-config-manager --add-repo {{ ofed_repo_file }}
   args:
     creates: /etc/yum.repos.d/{{ ofed_repo_name }}
@@ -9,8 +9,9 @@
   when:
     - ansible_os_family == "RedHat"
     - ansible_distribution_major_version < '8'
+    - ofed_custom_repos is not defined
 
-- name: Install the repository
+- name: Install the repository (dnf)
   command: dnf config-manager --add-repo {{ ofed_repo_file }}
   args:
     creates: /etc/yum.repos.d/{{ ofed_repo_name }}
@@ -18,6 +19,22 @@
   when:
     - ansible_os_family == "RedHat"
     - ansible_distribution_major_version >= '8'
+    - ofed_custom_repos is not defined
+
+- name: Install custom repositories (custom file)
+  yum_repository:
+    name: "{{ item.name }}"
+    description: "{{ item.description | default(omit) }}"
+    file: "{{ item.file }}"
+    baseurl: "{{ item.baseurl }}"
+    mirrorlist: "{{ item.mirrorlist | default(omit) }}"
+    enabled: "{{ item.enabled | default(omit) }}"
+    gpgcheck: "{{ item.gpgcheck | default(omit) }}"
+    gpgkey: "{{ item.gpgkey | default(omit) }}"
+    sslverify: "{{ item.sslverify | default(omit) }}"
+  become: true
+  when: ofed_custom_repos is defined
+  loop: "{{ ofed_custom_repos }}"
 
 - name: Install the GPG key
   rpm_key:
