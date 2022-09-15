@@ -48,6 +48,7 @@
     nobest: "{{ ofed_nobest | bool }}"
     skip_broken: "{{ ofed_skipbroken | bool }}"
     allowerasing: "{{ ofed_allowerasing | bool }}"
+    exclude: "{{ ofed_exclude | default(omit) }}"
   become: true
   when:
     - ansible_os_family == "RedHat"
@@ -60,6 +61,7 @@
     nobest: "{{ ofed_nobest | bool }}"
     skip_broken: "{{ ofed_skipbroken | bool }}"
     allowerasing: "{{ ofed_allowerasing | bool }}"
+    exclude: "{{ ofed_exclude | default(omit) }}"
   become: true
   when:
     - ansible_os_family == "RedHat"

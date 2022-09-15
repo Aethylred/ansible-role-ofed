@@ -99,7 +99,9 @@ If the OFED drivers fail to install with conflicts over `libibverbs` with an err
 
 This can be resolved from the command line by passing `--nobest` to `yum` or `dnf`, or with this playbook with the `ofed_nobest` variable.
 
-For further issues (such as installing older OFED drivers) the `--allowerasing` and `--skipbroken` parameters can also be passed with `ofed_allowerasing` and `ofed_skipbroken` respectivly
+For further issues (such as installing older OFED drivers) the `--allowerasing` and `--skipbroken` parameters can also be passed with `ofed_allowerasing` and `ofed_skipbroken` respectivly.
+
+If the problem can be pinned to specific packages these can be excluded with the `ofed_exclude` variable which passes the string or list as the `--exclude` argument. The example below excludes two specific packages with versions included.
 
 ```
     - hosts: servers
@@ -107,6 +109,9 @@ For further issues (such as installing older OFED drivers) the `--allowerasing` 
         ofed_nobest: true
         ofed_skipbroken: true
         ofed_allowerasing: true
+        ofed_exclude:
+          - libibumad-37.2-1.el8.x86_64
+          - infiniband-diags-37.2-1.el8.x86_64
       tasks:
         - include_role: stackhpc.ofed
 ```
