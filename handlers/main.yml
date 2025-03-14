@@ -1,7 +1,7 @@
 ---
 # handlers file for ofed
 - name: Restart OpenIB daemon
-  service:
+  ansible.builtin.service:
     name: openibd
     state: restarted
   become: true
